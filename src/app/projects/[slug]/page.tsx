@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { SiteFooter } from "@/components/landing/SiteFooter";
+import { MarkdownContent } from "@/components/project/MarkdownContent";
 import { ProjectGallery } from "@/components/project/ProjectGallery";
 import { ProjectHero } from "@/components/project/ProjectHero";
 import { Testimonial } from "@/components/project/Testimonial";
@@ -68,8 +69,8 @@ function Block({ eyebrow, body }: { eyebrow: string; body: string }) {
         <span className="text-primary">{"// "}</span>
         {eyebrow}
       </p>
-      <div className="mt-4 whitespace-pre-line text-base text-foreground/90 sm:text-lg">
-        {body}
+      <div className="mt-4">
+        <MarkdownContent>{body}</MarkdownContent>
       </div>
     </div>
   );

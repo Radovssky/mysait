@@ -27,6 +27,7 @@ import type { ProjectFormState } from "@/app/admin/(private)/projects/_actions";
 import type { Project } from "@db/schema";
 
 import { ImageUploader } from "./ImageUploader";
+import { MarkdownEditor } from "./MarkdownEditor";
 
 type Action = (
   state: ProjectFormState,
@@ -80,6 +81,9 @@ export function ProjectForm({
   const [coverImage, setCoverImage] = useState<string | null>(
     initial?.coverImage ?? null,
   );
+  const [context, setContext] = useState(initial?.context ?? "");
+  const [solution, setSolution] = useState(initial?.solution ?? "");
+  const [result, setResult] = useState(initial?.result ?? "");
 
   useEffect(() => {
     if (state.status === "ok" && successMessage) {
@@ -194,27 +198,18 @@ export function ProjectForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="context">Контекст / задача</FieldLabel>
-          <Textarea
-            id="context"
-            name="context"
-            defaultValue={initial?.context ?? ""}
-            rows={6}
-          />
+          <FieldLabel>Контекст / задача</FieldLabel>
+          <MarkdownEditor value={context} onChange={setContext} />
+          <input type="hidden" name="context" value={context} />
           <FieldDescription>
-            Markdown поддерживается на странице проекта (рендер появится
-            на шаге 9 плана).
+            Markdown с подсветкой кода. Заголовки, списки, цитаты, таблицы — всё работает.
           </FieldDescription>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="solution">Решение</FieldLabel>
-          <Textarea
-            id="solution"
-            name="solution"
-            defaultValue={initial?.solution ?? ""}
-            rows={8}
-          />
+          <FieldLabel>Решение</FieldLabel>
+          <MarkdownEditor value={solution} onChange={setSolution} height={400} />
+          <input type="hidden" name="solution" value={solution} />
         </Field>
 
         <Field>
@@ -232,13 +227,9 @@ export function ProjectForm({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="result">Результат / метрики</FieldLabel>
-          <Textarea
-            id="result"
-            name="result"
-            defaultValue={initial?.result ?? ""}
-            rows={5}
-          />
+          <FieldLabel>Результат / метрики</FieldLabel>
+          <MarkdownEditor value={result} onChange={setResult} />
+          <input type="hidden" name="result" value={result} />
         </Field>
 
         <div className="grid gap-6 sm:grid-cols-2">
