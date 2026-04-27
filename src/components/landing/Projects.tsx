@@ -14,7 +14,7 @@ export async function Projects() {
           {"// "}первые кейсы появятся здесь скоро.
         </p>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:gap-8">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {items.map((project, index) => (
             <RevealOnScroll key={project.id} delay={index * 0.05}>
               <ProjectCard project={project} />
