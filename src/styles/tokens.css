@@ -1,0 +1,14 @@
+:root {
+  --bg-base: #0b0f0e;
+  --bg-elevated: #141a18;
+  --border: #1f2a26;
+  --text-primary: #e8f0ec;
+  --text-muted: #8a9590;
+  --accent: #5ae8b4;
+  --accent-glow: rgba(90, 232, 180, 0.2);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 400ms;
+}
