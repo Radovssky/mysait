@@ -1,0 +1,27 @@
+**/.git
+**/.next
+**/node_modules
+**/.env
+**/.env*.local
+**/.env.production
+**/.vercel
+**/coverage
+**/.idea
+**/.vscode
+**/.turbo
+**/.cache
+**/Thumbs.db
+**/.DS_Store
+README.md
+PLAN.md
+CLAUDE.md
+AGENTS.md
+landing_info.md
+документация из обучения
+backups
+postgres_data
+uploads
+public/uploads
+3ef2d2f1-680b-4947-a0cb-00005c975705-cover.png
+photo_2024-10-07_00-51-24*.jpg
+*.log

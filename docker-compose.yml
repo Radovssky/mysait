@@ -1,0 +1,61 @@
+# Локальная разработка: postgres + web в Docker.
+# Caddy/HTTPS добавляются в шаге 12 (production-сборка).
+# Для итераций удобно поднимать только postgres: `docker compose up -d postgres`,
+# а web запускать рядом через `pnpm dev`.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mysait-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mysait}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: ${POSTGRES_DB:-mysait}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mysait} -d ${POSTGRES_DB:-mysait}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mysait-web
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      AUTH_SECRET: ${AUTH_SECRET}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - uploads:/var/data/uploads
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/api/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  uploads:
