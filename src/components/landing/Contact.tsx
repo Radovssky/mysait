@@ -9,8 +9,12 @@ export function Contact() {
   return (
     <SectionShell id="contact" eyebrow="контакт">
       <RevealOnScroll>
-        <div className="rounded-2xl border border-border bg-card p-8 sm:p-12">
-          <h2 className="font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 sm:p-12">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl"
+          />
+          <h2 className="relative font-sans text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
             Расскажите о задаче
           </h2>
           <div className="mt-4 max-w-2xl space-y-3 text-muted-foreground">

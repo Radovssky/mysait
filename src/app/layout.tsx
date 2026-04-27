@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { siteDescription, siteTitle, siteUrl } from "@/lib/seo";
+import { TopNav } from "@/components/landing/TopNav";
 import "./globals.css";
 
 const inter = Inter({
@@ -56,7 +57,10 @@ export default function RootLayout({
       lang="ru"
       className={cn("h-full antialiased", inter.variable, jetbrainsMono.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <TopNav />
+        {children}
+      </body>
     </html>
   );
 }

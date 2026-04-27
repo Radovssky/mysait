@@ -1,21 +1,20 @@
 import { integrations, tools } from "@/content/tech-stack";
 
 import { RevealOnScroll } from "./RevealOnScroll";
+import { SectionEyebrow } from "./SectionEyebrow";
 
 export function TechStack() {
   return (
     <section
       id="stack"
-      className="scroll-mt-16 border-t border-border/60 px-6 py-24 sm:px-10 lg:px-16"
+      className="scroll-mt-20 border-t border-border/60 px-6 py-24 sm:px-10 lg:px-16"
     >
       <div className="mx-auto w-full max-w-6xl">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <RevealOnScroll>
             <div>
-              <p className="font-mono text-sm text-muted-foreground">
-                <span className="text-primary">{"// "}</span>стек
-              </p>
-              <h2 className="mt-4 font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
+              <SectionEyebrow>стек</SectionEyebrow>
+              <h2 className="mt-5 font-sans text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
                 Чем собираю
               </h2>
               <ul className="mt-10 space-y-3">
@@ -36,10 +35,8 @@ export function TechStack() {
 
           <RevealOnScroll delay={0.1}>
             <div>
-              <p className="font-mono text-sm text-muted-foreground">
-                <span className="text-primary">{"// "}</span>интеграции
-              </p>
-              <h2 className="mt-4 font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
+              <SectionEyebrow>интеграции</SectionEyebrow>
+              <h2 className="mt-5 font-sans text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
                 С чем подключаю
               </h2>
               <ul className="mt-10 space-y-5">
