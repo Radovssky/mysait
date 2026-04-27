@@ -63,7 +63,10 @@ services:
     restart: unless-stopped
 
   caddy:
-    profiles: ["prod"]
+    # Caddy опциональный — на JustHost VPS уже nginx+certbot,
+    # поэтому в проде Caddy не поднимается. Локально для проверки HTTPS:
+    # docker compose --profile prod --profile caddy up -d
+    profiles: ["caddy"]
     image: caddy:2-alpine
     container_name: mysait-caddy
     environment:

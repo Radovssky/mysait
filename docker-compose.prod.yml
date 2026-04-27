@@ -1,0 +1,19 @@
+# Override для production-деплоя на JustHost VPS.
+# Поднимать так:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml --profile prod up -d --build
+#
+# Что меняем по сравнению с базовым docker-compose.yml:
+# 1. postgres не публикует 5432 наружу (на VPS этот порт уже занят n8n-postgres
+#    и в любом случае base postgres нужен только web-контейнеру через docker
+#    network).
+# 2. web публикует 3000 только на 127.0.0.1, чтобы nginx-хост мог проксировать,
+#    но никто из интернета не лез напрямую.
+
+services:
+  postgres:
+    ports: !reset []
+
+  web:
+    ports:
+      - "127.0.0.1:3000:3000"
+    expose: !reset []
