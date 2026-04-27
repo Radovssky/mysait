@@ -5,7 +5,7 @@ import { SectionShell } from "./SectionShell";
 
 export function Process() {
   return (
-    <SectionShell id="process" eyebrow="процесс" title="Как мы работаем">
+    <SectionShell id="process" eyebrow="процесс" title="Как идёт работа">
       <ol className="relative space-y-8 border-l border-border pl-10">
         {processSteps.map((step, index) => (
           <RevealOnScroll key={step.title} delay={index * 0.05}>

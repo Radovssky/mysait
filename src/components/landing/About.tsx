@@ -10,7 +10,7 @@ export function About() {
     <SectionShell
       id="about"
       eyebrow="о себе"
-      title="Один человек на связи от старта до поддержки"
+      title="Знаю, как устроены процессы — поэтому автоматизирую их так, чтобы работали"
     >
       <div className="grid gap-10 lg:grid-cols-[minmax(0,360px)_1fr] lg:items-start">
         <RevealOnScroll>

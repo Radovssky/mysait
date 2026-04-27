@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { about } from "@/content/about";
 
-const PHRASE = "Автоматизация бизнес-процессов";
+const PHRASE = "Сотрудники, которые не спят, не болеют и не увольняются";
 
 export function Hero() {
   const [shown, setShown] = useState(0);
@@ -36,17 +36,17 @@ export function Hero() {
       <div className="mx-auto w-full max-w-6xl">
         <p className="font-mono text-sm text-muted-foreground">
           <span className="text-primary">{"// "}</span>
-          {about.name}, {about.positioning}
+          @RadovSSky Automation Engineer
         </p>
-        <h1 className="mt-6 font-mono text-4xl font-semibold leading-[1.1] tracking-tight sm:text-6xl lg:text-7xl">
+        <h1 className="mt-6 font-mono text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
           <span aria-label={PHRASE}>{PHRASE.slice(0, shown)}</span>
           <span aria-hidden className="text-primary animate-blink">
             _
           </span>
         </h1>
         <p className="mt-8 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-          n8n, AI-агенты, голос и контент — собираю под задачу. Когда no-code
-          упирается в лимиты, пишу код.
+          Собираю AI-агентов и автоматизации, которые забирают рутину у вашей
+          команды — переписку, обзвон, контент, заявки.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <a

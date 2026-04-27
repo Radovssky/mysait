@@ -13,11 +13,16 @@ export function Contact() {
           <h2 className="font-mono text-3xl font-semibold tracking-tight sm:text-4xl">
             Расскажите о задаче
           </h2>
-          <p className="mt-4 max-w-2xl text-muted-foreground">
-            Стартуем с брифа: разбираемся в процессе и оцениваем срок. Без
-            обязательств с вашей стороны.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-4 max-w-2xl space-y-3 text-muted-foreground">
+            <p>
+              Напишите в Telegram пару строк о задаче — даже «у меня менеджер
+              не вывозит заявки с Авито, можно что-то сделать?» уже хватит. На
+              брифе разберёмся, что и как, и стоит ли вообще это
+              автоматизировать.
+            </p>
+            <p>Отвечаю в течение часа в рабочее время.</p>
+          </div>
+          <div className="mt-8">
             <a
               href={about.telegramUrl}
               target="_blank"
@@ -27,11 +32,8 @@ export function Contact() {
                 "font-mono",
               )}
             >
-              {"> "}написать в Telegram
+              {"> "}написать в Telegram {about.telegram}
             </a>
-            <span className="font-mono text-sm text-muted-foreground">
-              {about.telegram}
-            </span>
           </div>
         </div>
       </RevealOnScroll>
