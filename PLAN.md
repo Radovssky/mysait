@@ -12,6 +12,7 @@
 
 - **Frontend/Backend:** Next.js 15 (App Router, React Server Components, TypeScript)
 - **Стили:** Tailwind CSS 4 + CSS-переменные, Framer Motion для микро-анимаций
+- **UI-библиотека:** shadcn/ui (поверх Radix UI) + `class-variance-authority`, `clsx`, `tailwind-merge` — базовые примитивы (Button, Input, Textarea, Select, Dialog, Toast, Card, Form, Label) генерируем командой `npx shadcn@latest add`, не пишем руками. Стилизация через токены тёмной темы (`globals.css`).
 - **БД:** PostgreSQL 16 (Docker, рядом с приложением)
 - **ORM/Migrations:** Drizzle ORM + drizzle-kit
 - **Auth:** Auth.js (NextAuth v5), Credentials provider, **один пользователь** (Раду), пароль хешируется bcrypt, креды в env
@@ -19,6 +20,8 @@
 - **Markdown:** `@uiw/react-md-editor` в админке + `react-markdown` + `remark-gfm` + `rehype-highlight` на странице проекта
 - **Хостинг:** JustHost VPS, Docker Compose (web + postgres + caddy), Caddy для HTTPS (Let's Encrypt)
 - **CTA:** просто ссылки на Telegram `@Radovssky`, никакой формы и бэкенда заявок
+- **Менеджер пакетов:** pnpm (быстрее npm, дисково экономичнее, лучше работает в Docker через `pnpm fetch`)
+- **MCP-инструменты разработки** *(не код проекта, а помощники Claude)*: `context7` (актуальная документация Next.js / Drizzle / Auth.js) и `shadcn-ui` (быстрое добавление компонентов).
 
 ## Структура секций лендинга (главная `/`)
 
@@ -191,7 +194,7 @@
     │   ├── landing/            # Hero, About, Services, TechStack, Process, ProjectsGrid, ProjectCard, Contact
     │   ├── project/            # ProjectHero, ProjectGallery, Testimonial, MarkdownContent
     │   ├── admin/              # LoginForm, ProjectForm, ScreenshotsManager, TestimonialEditor, ImageUploader, MarkdownEditor
-    │   └── ui/                 # Button, Badge, Input, Textarea (общие)
+    │   └── ui/                 # сгенерированные shadcn/ui примитивы (button, input, textarea, dialog, toast, card, form...)
     ├── lib/
     │   ├── db.ts               # Drizzle client
     │   ├── auth-helpers.ts     # requireAdmin
@@ -230,18 +233,36 @@
 ## Деплой на JustHost VPS
 
 `docker-compose.yml`:
-- `postgres:16-alpine` (volume `pg_data`, порт только internal)
-- `web` (build из Dockerfile, env-vars из `.env`, depends_on postgres, volume `/var/data/uploads`)
-- `caddy:2-alpine` (Caddyfile, volumes для Let's Encrypt сертификатов, ports 80/443)
+- `postgres:16-alpine` (volume `pg_data`, порт только internal, healthcheck через `pg_isready`)
+- `web` (build из Dockerfile, env-vars из `.env`, `depends_on: postgres (condition: service_healthy)`, volume `/var/data/uploads`, healthcheck на `/api/health`)
+- `caddy:2-alpine` (Caddyfile, volumes для Let's Encrypt сертификатов, ports 80/443, `depends_on: web (condition: service_healthy)`)
+
+Health checks (требование Урока 6):
+- Postgres: `pg_isready -U $POSTGRES_USER`, interval 10s
+- Web: GET `/api/health` (возвращает 200 + проверку БД), interval 30s, start_period 40s
+- Перезапуск контейнера при `unhealthy` через `restart: unless-stopped`
 
 Первичный деплой:
 1. Поднять VPS (минимум 1 GB RAM, Ubuntu 22.04+, Docker, Docker Compose)
-2. `git clone`, скопировать `.env.example` в `.env`, заполнить `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `NEXTAUTH_URL`
+2. `git clone`, скопировать `.env.example` в `.env`, заполнить `DATABASE_URL`, `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `NEXTAUTH_URL`, `POSTGRES_PASSWORD`
 3. `docker compose up -d --build`
 4. Внутри контейнера web: `pnpm drizzle-kit push` для применения схемы
 5. Сид админ-пользователя: одноразовый скрипт `pnpm tsx scripts/seed-admin.ts`
 
 Дальнейшие обновления: `git pull && docker compose up -d --build web`
+
+## Бэкапы и обслуживание БД
+
+Урок 4 явно требует «всегда делать ДАМП перед изменениями БД». Реализуем:
+
+- `scripts/backup.sh` — `pg_dump` всей БД в файл `backups/dump_YYYY-MM-DD_HH-MM.sql.gz` (gzip-сжатие). Запускается вручную перед миграциями и через cron (раз в сутки).
+- `scripts/restore.sh` — обратный процесс из выбранного дампа.
+- `scripts/backup-uploads.sh` — `tar czf backups/uploads_YYYY-MM-DD.tar.gz /var/data/uploads`.
+- Папка `backups/` в `.gitignore` (объёмные бинари не в репо).
+- Crontab на VPS:
+  - `0 3 * * * /srv/app/scripts/backup.sh && /srv/app/scripts/backup-uploads.sh`
+  - Опционально — `rsync` бэкапов на внешний хостинг (можно и позже, не на старте).
+- Ротация: оставляем последние 7 дневных + 4 недельных дампа, остальное удаляем (простой `find -mtime +7 -delete`).
 
 ## Файлы, которые нужно будет создать/затронуть
 
@@ -260,18 +281,20 @@
 
 ## Последовательность реализации
 
-1. Скаффолд Next.js 15 + Tailwind + токены тёмной темы
-2. Шрифты, базовый layout, дизайн-система (Button, Badge, Input)
-3. Лендинг со статичными секциями (Hero → About → Services → TechStack → Process → Contact), включая анимации hover/scroll
-4. Docker Compose + Postgres + Drizzle, схема БД, миграции
+1. Скаффолд Next.js 15 + Tailwind 4 + токены тёмной темы (`globals.css`)
+2. Установка shadcn/ui (`npx shadcn@latest init`) + базовые примитивы (button, input, textarea, label, dialog, toast, card, form, select), шрифты через `next/font`
+3. Лендинг со статичными секциями (Hero → About → Services → TechStack → Process → Contact), включая анимации hover/scroll через Framer Motion
+4. Docker Compose + Postgres + Drizzle, схема БД, миграции, health checks для контейнеров, `/api/health` route
 5. Auth.js + middleware + страница `/admin/login`, сид админ-пользователя
 6. Чтение проектов из БД на главной (`ProjectsGrid` + `ProjectCard`), страница `/projects/[slug]`
 7. Админка: список проектов, форма создания/редактирования (без медиа)
 8. Загрузка файлов: route handlers + ImageUploader-компонент + интеграция в форму (cover, screenshots, testimonial photo)
 9. Markdown-редактор и рендеринг
 10. SEO: metadata, sitemap, robots, JSON-LD, OG-images
-11. Caddyfile + production-сборка, проверка на VPS
-12. Финальный прогон Lighthouse (цель: Performance 95+, SEO 100, Accessibility 95+)
+11. Скрипты бэкапов (`scripts/backup.sh`, `scripts/restore.sh`, `scripts/backup-uploads.sh`)
+12. Caddyfile + production-сборка, проверка локально через `docker compose up`
+13. Деплой на JustHost VPS, настройка cron для бэкапов
+14. Финальный прогон Lighthouse (цель: Performance 95+, SEO 100, Accessibility 95+)
 
 ## Верификация
 
