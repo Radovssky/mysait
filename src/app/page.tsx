@@ -6,6 +6,7 @@ import { Projects } from "@/components/landing/Projects";
 import { Services } from "@/components/landing/Services";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { TechStack } from "@/components/landing/TechStack";
+import { personJsonLd } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -13,6 +14,10 @@ export default function Home() {
   return (
     <>
       <main className="flex-1">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
         <Hero />
         <About />
         <Services />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { siteDescription, siteTitle, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -16,12 +17,33 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Раду — Automation Engineer",
-    template: "%s — Раду | Automation Engineer",
+    default: siteTitle,
+    template: `%s — ${siteTitle.split(" — ")[0]} | ${siteTitle.split(" — ")[1]}`,
   },
-  description:
-    "Automation Engineer: чат-боты, AI-агенты, голосовые ассистенты, контент-генерация. n8n, OpenAI, интеграции с CRM и мессенджерами.",
+  description: siteDescription,
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    siteName: siteTitle,
+    title: siteTitle,
+    description: siteDescription,
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
