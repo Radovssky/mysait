@@ -51,9 +51,9 @@ pnpm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# project: uploads (хранятся в Docker volume, не в репо)
-uploads/
-public/uploads/
+# project: uploads (хранятся в Docker volume / локальной папке /uploads, не в репо)
+/uploads/
+/public/uploads/
 
 # project: docker volumes
 postgres_data/

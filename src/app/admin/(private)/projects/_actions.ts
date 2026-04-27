@@ -7,8 +7,9 @@ import { z } from "zod";
 
 import { requireAdmin } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
+import { deleteImage } from "@/lib/storage";
 
-import { projects } from "@db/schema";
+import { projects, projectScreenshots, testimonials } from "@db/schema";
 
 const categorySchema = z.enum([
   "chatbot",
@@ -26,6 +27,10 @@ const projectSchema = z.object({
     .max(100)
     .regex(/^[a-z0-9-]+$/, "Только латиница, цифры и дефис"),
   shortDescription: z.string().min(1, "Краткое описание обязательно").max(500),
+  coverImage: z
+    .string()
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
   category: categorySchema.optional().or(z.literal("").transform(() => undefined)),
   client: z.string().max(200).optional().or(z.literal("").transform(() => undefined)),
   context: z.string().optional().or(z.literal("").transform(() => undefined)),
@@ -53,6 +58,7 @@ function readForm(formData: FormData) {
     title: String(formData.get("title") ?? ""),
     slug: String(formData.get("slug") ?? ""),
     shortDescription: String(formData.get("shortDescription") ?? ""),
+    coverImage: String(formData.get("coverImage") ?? ""),
     category: String(formData.get("category") ?? ""),
     client: String(formData.get("client") ?? ""),
     context: String(formData.get("context") ?? ""),
@@ -107,6 +113,7 @@ export async function createProjectAction(
         title: data.title,
         slug: data.slug,
         shortDescription: data.shortDescription,
+        coverImage: data.coverImage,
         category: data.category,
         client: data.client,
         context: data.context,
@@ -146,13 +153,22 @@ export async function updateProjectAction(
 
   const data = parsed.data;
 
+  let previousCover: string | null = null;
   try {
+    const [prev] = await db
+      .select({ coverImage: projects.coverImage })
+      .from(projects)
+      .where(eq(projects.id, id))
+      .limit(1);
+    previousCover = prev?.coverImage ?? null;
+
     await db
       .update(projects)
       .set({
         title: data.title,
         slug: data.slug,
         shortDescription: data.shortDescription,
+        coverImage: data.coverImage,
         category: data.category,
         client: data.client,
         context: data.context,
@@ -175,6 +191,10 @@ export async function updateProjectAction(
     };
   }
 
+  if (previousCover && previousCover !== data.coverImage) {
+    await deleteImage(previousCover);
+  }
+
   invalidate(data.slug);
   return { status: "ok" };
 }
@@ -195,10 +215,33 @@ export async function togglePublishAction(id: string, current: boolean) {
 
 export async function deleteProjectAction(id: string) {
   await requireAdmin();
-  const [row] = await db
-    .delete(projects)
+
+  const [project] = await db
+    .select({ slug: projects.slug, coverImage: projects.coverImage })
+    .from(projects)
     .where(eq(projects.id, id))
-    .returning({ slug: projects.slug });
-  if (row) invalidate(row.slug);
+    .limit(1);
+
+  if (!project) redirect("/admin");
+
+  const screenshots = await db
+    .select({ imagePath: projectScreenshots.imagePath })
+    .from(projectScreenshots)
+    .where(eq(projectScreenshots.projectId, id));
+
+  const testimonialPhotos = await db
+    .select({ photoPath: testimonials.photoPath })
+    .from(testimonials)
+    .where(eq(testimonials.projectId, id));
+
+  await db.delete(projects).where(eq(projects.id, id));
+
+  await Promise.all([
+    deleteImage(project.coverImage),
+    ...screenshots.map((s) => deleteImage(s.imagePath)),
+    ...testimonialPhotos.map((t) => deleteImage(t.photoPath)),
+  ]);
+
+  invalidate(project.slug);
   redirect("/admin");
 }

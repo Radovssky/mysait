@@ -26,6 +26,8 @@ import { slugify } from "@/lib/slug";
 import type { ProjectFormState } from "@/app/admin/(private)/projects/_actions";
 import type { Project } from "@db/schema";
 
+import { ImageUploader } from "./ImageUploader";
+
 type Action = (
   state: ProjectFormState,
   formData: FormData,
@@ -75,6 +77,9 @@ export function ProjectForm({
   );
   const [category, setCategory] = useState<string>(initial?.category ?? "");
   const [isPublished, setIsPublished] = useState(initial?.isPublished ?? false);
+  const [coverImage, setCoverImage] = useState<string | null>(
+    initial?.coverImage ?? null,
+  );
 
   useEffect(() => {
     if (state.status === "ok" && successMessage) {
@@ -167,6 +172,20 @@ export function ProjectForm({
             </SelectContent>
           </Select>
           <input type="hidden" name="category" value={category ?? ""} />
+        </Field>
+
+        <Field>
+          <FieldLabel>Обложка</FieldLabel>
+          <ImageUploader
+            value={coverImage}
+            onChange={setCoverImage}
+            description="Главное изображение кейса. Показывается на карточке главной и в шапке /projects/[slug]."
+          />
+          <input
+            type="hidden"
+            name="coverImage"
+            value={coverImage ?? ""}
+          />
         </Field>
 
         <Field>
