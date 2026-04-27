@@ -1,0 +1,14 @@
+# Пример crontab для VPS. Установить через `crontab -e` от того же пользователя,
+# который владеет /srv/mysait и имеет доступ к docker.
+#
+# Логи бэкапов кладём в /var/log/mysait-backup.log (создать заранее
+# `sudo touch /var/log/mysait-backup.log && sudo chown <user> /var/log/mysait-backup.log`).
+
+# Дамп БД — каждый день в 03:00
+0 3 * * * cd /srv/mysait && /srv/mysait/scripts/backup.sh >> /var/log/mysait-backup.log 2>&1
+
+# Архив uploads — каждый день в 03:15 (после дампа БД, чтобы не конкурировать за CPU)
+15 3 * * * cd /srv/mysait && /srv/mysait/scripts/backup-uploads.sh >> /var/log/mysait-backup.log 2>&1
+
+# (опционально) еженедельный rsync бэкапов на удалённый хост по SSH
+# 0 5 * * 0 rsync -azP /srv/mysait/backups/ backup@remote.example.com:/var/backups/mysait/
