@@ -1,0 +1,51 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing
+coverage/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Production
+build/
+dist/
+
+# Environment
+.env
+.env*.local
+.env.production
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Uploads (изображения проектов хранятся в БД-связанном volume, не в репо)
+uploads/
+public/uploads/
+
+# Drizzle generated
+drizzle/meta/_journal.json.bak
+
+# Local docker volumes
+postgres_data/
+
+# Claude/agent caches
+.claude/cache/
