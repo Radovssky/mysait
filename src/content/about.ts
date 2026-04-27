@@ -2,7 +2,7 @@ export const about = {
   name: "Раду",
   positioning: "Automation Engineer",
   city: "Казань",
-  telegram: "@Radovssky",
+  telegram: "@RadovSSky",
   telegramUrl: "https://t.me/Radovssky",
   bio: [
     "Большинство автоматизаций ломаются не из-за кода, а из-за того, что разработчик не понял, как на самом деле работает бизнес клиента. Поэтому я начинаю не с n8n, а с вопросов: где деньги, где узкое место, что произойдёт, если эту операцию убрать у человека.",
