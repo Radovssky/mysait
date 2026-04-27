@@ -1,12 +1,53 @@
+/*
+ * Дизайн-токены проекта в shadcn-конвенции.
+ * Тема — фиксированная тёмная (без переключателя), поэтому всё лежит в :root.
+ */
 :root {
-  --bg-base: #0b0f0e;
-  --bg-elevated: #141a18;
-  --border: #1f2a26;
-  --text-primary: #e8f0ec;
-  --text-muted: #8a9590;
-  --accent: #5ae8b4;
-  --accent-glow: rgba(90, 232, 180, 0.2);
+  --background: #0b0f0e;
+  --foreground: #e8f0ec;
 
+  --card: #141a18;
+  --card-foreground: #e8f0ec;
+
+  --popover: #141a18;
+  --popover-foreground: #e8f0ec;
+
+  --primary: #5ae8b4;
+  --primary-foreground: #0b0f0e;
+
+  --secondary: #141a18;
+  --secondary-foreground: #e8f0ec;
+
+  --muted: #141a18;
+  --muted-foreground: #8a9590;
+
+  --accent: #1f2a26;
+  --accent-foreground: #e8f0ec;
+
+  --destructive: oklch(0.704 0.191 22.216);
+
+  --border: #1f2a26;
+  --input: #1f2a26;
+  --ring: #5ae8b4;
+
+  --chart-1: #5ae8b4;
+  --chart-2: oklch(0.708 0 0);
+  --chart-3: oklch(0.556 0 0);
+  --chart-4: oklch(0.439 0 0);
+  --chart-5: oklch(0.371 0 0);
+
+  --sidebar: #141a18;
+  --sidebar-foreground: #e8f0ec;
+  --sidebar-primary: #5ae8b4;
+  --sidebar-primary-foreground: #0b0f0e;
+  --sidebar-accent: #1f2a26;
+  --sidebar-accent-foreground: #e8f0ec;
+  --sidebar-border: #1f2a26;
+  --sidebar-ring: #5ae8b4;
+
+  --radius: 0.5rem;
+
+  --brand-glow: rgba(90, 232, 180, 0.2);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 200ms;
   --duration-base: 300ms;
