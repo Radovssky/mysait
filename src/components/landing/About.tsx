@@ -27,23 +27,10 @@ export function About() {
         </RevealOnScroll>
 
         <RevealOnScroll delay={0.1}>
-          <div className="space-y-8">
-            <ul className="grid grid-cols-2 gap-3 font-mono text-sm sm:max-w-md">
-              {about.facts.map((fact) => (
-                <li
-                  key={fact.label}
-                  className="flex flex-col rounded-lg border border-border/70 bg-card px-4 py-3"
-                >
-                  <span className="text-muted-foreground">{fact.label}</span>
-                  <span className="text-foreground">{fact.value}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="space-y-4 text-base text-muted-foreground sm:text-lg">
-              {about.bio.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
+          <div className="space-y-4 text-base text-muted-foreground sm:text-lg">
+            {about.bio.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
         </RevealOnScroll>
       </div>
