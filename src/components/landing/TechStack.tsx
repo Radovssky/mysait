@@ -7,8 +7,12 @@ export function TechStack() {
   return (
     <section
       id="stack"
-      className="scroll-mt-20 border-t border-border/60 px-6 py-24 sm:px-10 lg:px-16"
+      className="scroll-mt-20 relative px-6 py-24 sm:px-10 lg:px-16"
     >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border/80 to-transparent"
+      />
       <div className="mx-auto w-full max-w-6xl">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <RevealOnScroll>
