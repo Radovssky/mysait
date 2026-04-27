@@ -105,7 +105,6 @@ export function ProjectForm({
             id="title"
             name="title"
             value={title}
-            required
             onChange={(event) => {
               const next = event.target.value;
               setTitle(next);
@@ -123,7 +122,6 @@ export function ProjectForm({
             id="slug"
             name="slug"
             value={slug}
-            required
             onChange={(event) => {
               setSlug(event.target.value);
               setSlugTouched(true);
@@ -145,7 +143,6 @@ export function ProjectForm({
             name="shortDescription"
             defaultValue={initial?.shortDescription ?? ""}
             rows={3}
-            required
             maxLength={500}
           />
           <FieldDescription>

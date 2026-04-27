@@ -31,10 +31,7 @@ export async function saveTestimonialAction(
   await requireAdmin();
 
   const authorName = String(formData.get("authorName") ?? "").trim();
-  if (!authorName) throw new Error("Имя автора обязательно");
-
   const text = String(formData.get("text") ?? "").trim();
-  if (!text) throw new Error("Текст отзыва обязателен");
 
   const authorRoleRaw = String(formData.get("authorRole") ?? "").trim();
   const authorRole = authorRoleRaw.length > 0 ? authorRoleRaw : null;
@@ -48,11 +45,19 @@ export async function saveTestimonialAction(
     .where(eq(testimonials.projectId, projectId))
     .limit(1);
 
+  // Если все смысловые поля пусты — отзыв не нужен. Удаляем существующий
+  // (если был) и не вставляем нового. Это и есть «отзыв необязателен».
+  if (!authorName && !text && !authorRole && !photoPath) {
+    if (existing) {
+      if (existing.photoPath) await deleteImage(existing.photoPath);
+      await db.delete(testimonials).where(eq(testimonials.id, existing.id));
+      await invalidateForProject(projectId);
+    }
+    return;
+  }
+
   if (existing) {
-    if (
-      existing.photoPath &&
-      existing.photoPath !== photoPath
-    ) {
+    if (existing.photoPath && existing.photoPath !== photoPath) {
       await deleteImage(existing.photoPath);
     }
     await db

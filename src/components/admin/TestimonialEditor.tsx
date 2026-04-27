@@ -79,7 +79,6 @@ export function TestimonialEditor({ projectId, initial }: Props) {
             id="authorName"
             name="authorName"
             defaultValue={initial?.authorName ?? ""}
-            required
           />
         </Field>
 
@@ -100,7 +99,6 @@ export function TestimonialEditor({ projectId, initial }: Props) {
             name="text"
             defaultValue={initial?.text ?? ""}
             rows={6}
-            required
           />
           <FieldDescription>
             Без обрамляющих кавычек — они появятся в вёрстке кейса.

@@ -1,5 +1,7 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+
 import { eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -7,9 +9,19 @@ import { z } from "zod";
 
 import { requireAdmin } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
+import { slugify } from "@/lib/slug";
 import { deleteImage } from "@/lib/storage";
 
 import { projects, projectScreenshots, testimonials } from "@db/schema";
+
+function ensureSlug(slug: string, title: string): string {
+  if (slug) return slug;
+  if (title) {
+    const fromTitle = slugify(title);
+    if (fromTitle) return fromTitle;
+  }
+  return `case-${randomUUID().slice(0, 8)}`;
+}
 
 const categorySchema = z.enum([
   "chatbot",
@@ -20,13 +32,13 @@ const categorySchema = z.enum([
 ]);
 
 const projectSchema = z.object({
-  title: z.string().min(1, "Заголовок обязателен").max(200),
+  title: z.string().max(200).default(""),
   slug: z
     .string()
-    .min(1, "Slug обязателен")
     .max(100)
-    .regex(/^[a-z0-9-]+$/, "Только латиница, цифры и дефис"),
-  shortDescription: z.string().min(1, "Краткое описание обязательно").max(500),
+    .regex(/^[a-z0-9-]*$/, "Только латиница, цифры и дефис")
+    .default(""),
+  shortDescription: z.string().max(500).default(""),
   coverImage: z
     .string()
     .optional()
@@ -104,6 +116,7 @@ export async function createProjectAction(
   if (!parsed.success) return toErrorState(parsed.error);
 
   const data = parsed.data;
+  const finalSlug = ensureSlug(data.slug, data.title);
   let createdId: string;
 
   try {
@@ -111,7 +124,7 @@ export async function createProjectAction(
       .insert(projects)
       .values({
         title: data.title,
-        slug: data.slug,
+        slug: finalSlug,
         shortDescription: data.shortDescription,
         coverImage: data.coverImage,
         category: data.category,
@@ -132,12 +145,12 @@ export async function createProjectAction(
     return {
       status: "error",
       message: message.includes("unique")
-        ? `Slug «${data.slug}» уже занят`
+        ? `Slug «${finalSlug}» уже занят`
         : message,
     };
   }
 
-  invalidate(data.slug);
+  invalidate(finalSlug);
   redirect(`/admin/projects/${createdId}/edit?saved=1`);
 }
 
@@ -152,6 +165,7 @@ export async function updateProjectAction(
   if (!parsed.success) return toErrorState(parsed.error);
 
   const data = parsed.data;
+  const finalSlug = ensureSlug(data.slug, data.title);
 
   let previousCover: string | null = null;
   try {
@@ -166,7 +180,7 @@ export async function updateProjectAction(
       .update(projects)
       .set({
         title: data.title,
-        slug: data.slug,
+        slug: finalSlug,
         shortDescription: data.shortDescription,
         coverImage: data.coverImage,
         category: data.category,
@@ -186,7 +200,7 @@ export async function updateProjectAction(
     return {
       status: "error",
       message: message.includes("unique")
-        ? `Slug «${data.slug}» уже занят`
+        ? `Slug «${finalSlug}» уже занят`
         : message,
     };
   }
@@ -195,7 +209,7 @@ export async function updateProjectAction(
     await deleteImage(previousCover);
   }
 
-  invalidate(data.slug);
+  invalidate(finalSlug);
   return { status: "ok" };
 }
 

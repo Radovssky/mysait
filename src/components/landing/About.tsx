@@ -29,7 +29,7 @@ export function About() {
                 priority
               />
             </div>
-            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-md border border-primary/40 bg-card px-3 py-1.5 font-mono text-xs shadow-lg">
+            <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-primary/40 bg-card px-3 py-1.5 font-mono text-xs shadow-lg">
               <span className="text-primary">{"</>"}</span>{" "}
               <span className="text-foreground">automation engineer</span>
             </span>

@@ -21,8 +21,8 @@ export function ProjectCard({ project }: { project: Project }) {
         aria-hidden
         className="absolute inset-x-0 top-0 z-10 h-px origin-left scale-x-0 bg-gradient-to-r from-primary via-primary/50 to-transparent transition-transform duration-500 group-hover:scale-x-100"
       />
-      <div className="relative aspect-[16/9] overflow-hidden bg-muted">
-        {project.coverImage ? (
+      {project.coverImage && (
+        <div className="relative aspect-[16/9] overflow-hidden bg-muted">
           <Image
             src={project.coverImage}
             alt={project.title}
@@ -30,12 +30,8 @@ export function ProjectCard({ project }: { project: Project }) {
             sizes="(min-width: 1024px) 480px, 100vw"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
-        ) : (
-          <div className="flex h-full items-center justify-center font-mono text-xs text-muted-foreground">
-            {"// no cover"}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
       <div className="p-6">
         {project.category && (
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-2.5 py-0.5 font-mono text-xs uppercase tracking-[0.16em] text-primary">
