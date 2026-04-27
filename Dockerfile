@@ -18,6 +18,16 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
     pnpm install --offline --frozen-lockfile
 COPY . .
+
+# Build-time placeholders. Реальные значения приходят на runtime из
+# docker-compose.yml. Без этого Next.js падает при prerender страниц,
+# которые тянут БД (sitemap, главная) — у нас нет access к реальному
+# postgres во время `docker build`.
+ENV DATABASE_URL=postgresql://buildtime:none@127.0.0.1:1/none \
+    AUTH_SECRET=buildtime-not-used \
+    NEXTAUTH_URL=http://localhost:3000 \
+    SITE_URL=http://localhost:3000
+
 RUN pnpm build
 
 # ===== runtime =====

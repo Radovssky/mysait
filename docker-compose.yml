@@ -1,7 +1,7 @@
-# Локальная разработка: postgres + web в Docker.
-# Caddy/HTTPS добавляются в шаге 12 (production-сборка).
-# Для итераций удобно поднимать только postgres: `docker compose up -d postgres`,
-# а web запускать рядом через `pnpm dev`.
+# Локально удобно поднимать только postgres (`docker compose up -d postgres`),
+# а web запускать рядом через `pnpm dev` для быстрого HMR.
+# Production-сборка: `docker compose --profile prod up -d --build`
+# (postgres + web + caddy с автоHTTPS).
 
 services:
   postgres:
@@ -24,27 +24,33 @@ services:
     restart: unless-stopped
 
   web:
+    profiles: ["prod"]
     build:
       context: .
       dockerfile: Dockerfile
     container_name: mysait-web
     environment:
       NODE_ENV: production
-      DATABASE_URL: ${DATABASE_URL}
+      # Внутри docker-сети хост postgres = имя сервиса, поэтому собираем URL
+      # здесь, а не из .env (там DATABASE_URL под локальный pnpm dev).
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mysait}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-mysait}
       AUTH_SECRET: ${AUTH_SECRET}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
+      SITE_URL: ${SITE_URL:-${NEXTAUTH_URL}}
+      UPLOADS_DIR: /var/data/uploads
     depends_on:
       postgres:
         condition: service_healthy
     volumes:
       - uploads:/var/data/uploads
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     healthcheck:
       test:
         [
           "CMD",
           "wget",
+          "-4",
           "--no-verbose",
           "--tries=1",
           "--spider",
@@ -56,6 +62,27 @@ services:
       start_period: 40s
     restart: unless-stopped
 
+  caddy:
+    profiles: ["prod"]
+    image: caddy:2-alpine
+    container_name: mysait-caddy
+    environment:
+      CADDY_HOST: ${CADDY_HOST:-:80}
+      CADDY_ACME_EMAIL: ${CADDY_ACME_EMAIL:-dev@example.com}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      web:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   pg_data:
   uploads:
+  caddy_data:
+  caddy_config:

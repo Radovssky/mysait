@@ -1,0 +1,25 @@
+{
+	email {$CADDY_ACME_EMAIL:dev@example.com}
+}
+
+# CADDY_HOST задаётся в .env / docker-compose:
+#   - локально: ":80"  → HTTP без TLS
+#   - на проде: "mysait.example.com" → автоматически HTTPS через Let's Encrypt
+{$CADDY_HOST::80} {
+	encode gzip zstd
+
+	request_body {
+		max_size 10MB
+	}
+
+	reverse_proxy web:3000 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	log {
+		output stdout
+		format console
+	}
+}
