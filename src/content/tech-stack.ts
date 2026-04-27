@@ -1,27 +1,36 @@
-export type StackCategory = {
-  title: string;
-  items: string[];
+export type Tool = {
+  name: string;
+  description: string;
 };
 
-export const techStack: StackCategory[] = [
+export type Integration = {
+  label: string;
+  items: string;
+};
+
+export const tools: Tool[] = [
+  { name: "n8n", description: "основная платформа автоматизации" },
   {
-    title: "Ядро",
-    items: ["n8n", "Docker", "VPS"],
+    name: "Claude Code",
+    description: "разработка на коде, когда no-code не хватает",
   },
+  { name: "Cursor", description: "IDE для веб-приложений" },
+  { name: "Docker", description: "упаковка и деплой" },
+  { name: "VPS", description: "self-hosted развёртывание" },
+  { name: "PostgreSQL", description: "базы под проекты" },
+  { name: "Supabase", description: "быстрый бэкенд для прототипов" },
+];
+
+export const integrations: Integration[] = [
   {
-    title: "AI / LLM",
-    items: ["OpenRouter", "OpenAI", "Claude", "DeepSeek", "ElevenLabs"],
+    label: "LLM-модели",
+    items: "OpenAI, Claude, DeepSeek и любые через OpenRouter",
   },
+  { label: "Голос", items: "ElevenLabs" },
+  { label: "CRM", items: "amoCRM, Bitrix24, YClients" },
   {
-    title: "CRM",
-    items: ["amoCRM", "Bitrix24", "YClients"],
+    label: "Мессенджеры",
+    items: "Telegram, WhatsApp, Avito, MAX, VK, Instagram",
   },
-  {
-    title: "Мессенджеры",
-    items: ["Telegram", "WhatsApp", "Avito", "MAX", "VK", "Instagram"],
-  },
-  {
-    title: "БД и хранилища",
-    items: ["Supabase", "PostgreSQL", "Google Sheets", "Airtable", "Notion"],
-  },
+  { label: "Хранилища", items: "Google Sheets, Airtable, Notion" },
 ];
