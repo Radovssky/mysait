@@ -66,3 +66,8 @@ drizzle/meta/_journal.json.bak
 
 # Claude/agent caches
 .claude/cache/
+
+# Local source artefacts (already used, kept for reference outside the repo)
+/Otzivi/
+/Screenshot*.jpg
+/cases_for_admin.md
