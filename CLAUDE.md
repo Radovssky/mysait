@@ -15,7 +15,7 @@
 
 ## Стек (кратко — детали в PLAN.md)
 
-- Next.js 15 (App Router, TypeScript) + Tailwind CSS 4 + Framer Motion + shadcn/ui
+- Next.js 16 (App Router, TypeScript, React 19) + Tailwind CSS 4 + Framer Motion + shadcn/ui
 - PostgreSQL 16 в Docker (self-hosted, **БЕЗ** Supabase) + Drizzle ORM
 - Auth.js v5 (Credentials, один пользователь)
 - Локальные файлы изображений в `/var/data/uploads`, отдаются через Next.js route handler
@@ -31,9 +31,12 @@
 
 ## Текущий статус
 
-- Git: репо инициализирован (`git@github.com:Radovssky/mysait.git`), ветка `main`, удалённый origin подключён, инит-коммит запушен (только исходники).
-- Код проекта: **ещё не создан**. Стартуем с шага 1 плана — скаффолд Next.js.
-- Задачи: при старте новой сессии пересоздай 14 пунктов из раздела "Последовательность реализации" в PLAN.md через TaskCreate.
+- Git: репо инициализирован (`git@github.com:Radovssky/mysait.git`), ветка `main`, удалённый origin подключён.
+- Прогресс по плану:
+  - ✅ Шаг 1/14 — scaffold Next.js + Tailwind 4 + dark theme tokens (commit `8495540`).
+  - ⏳ Шаг 2/14 — shadcn/ui init + базовые примитивы.
+- Версия Next.js: при скаффолде `create-next-app@latest` поставил **Next 16.2.4 + React 19.2.4** (latest stable на 2026-04-27). Раду подтвердил оставить 16. Все API из PLAN.md совместимы; в корне лежит `AGENTS.md` от шаблона с предупреждением для AI про возможные расхождения с training data. Если будут сомнения по API — свериться через `context7` MCP.
+- Задачи: при старте новой сессии проверь `TaskList`. Если пусто — пересоздай 14 пунктов из раздела "Последовательность реализации" в PLAN.md через TaskCreate.
 
 ## Команды разработки
 
@@ -57,5 +60,9 @@ docker compose up -d  # поднять Postgres + web + caddy локально
 ## Чего пока нет, но может понадобиться
 
 - `.env` — будет создан вместе с docker-compose.yml на шаге 4. Шаблон в `.env.example`.
-- `package.json`, `tsconfig.json`, конфиги Tailwind / Drizzle / Next — появятся на шаге 1-2.
-- `node_modules/`, `.next/`, `uploads/`, `postgres_data/` — в `.gitignore`, никогда не коммитим.
+- Конфиги Drizzle (`drizzle.config.ts`, `drizzle/schema.ts`) — появятся на шаге 4.
+- `node_modules/`, `.next/`, `uploads/`, `postgres_data/`, `backups/` — в `.gitignore`, никогда не коммитим.
+
+## Среда разработки
+
+Хост: WSL2 без sudo. `pnpm` уже установлен через corepack-shim в `~/.local/bin` (`pnpm --version` → 10.33.2). Если в новой сессии `pnpm: command not found` — `corepack enable --install-directory ~/.local/bin` (детали в memory `user_env.md`).

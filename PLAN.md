@@ -10,7 +10,7 @@
 
 ## Стек (зафиксировано)
 
-- **Frontend/Backend:** Next.js 15 (App Router, React Server Components, TypeScript)
+- **Frontend/Backend:** Next.js 16 (App Router, React Server Components, React 19, TypeScript) — версия пересмотрена на шаге 1: `create-next-app@latest` поставил 16.2.4 как latest stable; все пункты плана совместимы
 - **Стили:** Tailwind CSS 4 + CSS-переменные, Framer Motion для микро-анимаций
 - **UI-библиотека:** shadcn/ui (поверх Radix UI) + `class-variance-authority`, `clsx`, `tailwind-merge` — базовые примитивы (Button, Input, Textarea, Select, Dialog, Toast, Card, Form, Label) генерируем командой `npx shadcn@latest add`, не пишем руками. Стилизация через токены тёмной темы (`globals.css`).
 - **БД:** PostgreSQL 16 (Docker, рядом с приложением)
