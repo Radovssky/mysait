@@ -12,6 +12,7 @@ const links = [
   { href: "#services", label: "услуги" },
   { href: "#stack", label: "стек" },
   { href: "#projects", label: "кейсы" },
+  { href: "#testimonials", label: "отзывы" },
   { href: "#contact", label: "контакт" },
 ];
 

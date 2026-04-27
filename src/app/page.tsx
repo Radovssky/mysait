@@ -6,6 +6,7 @@ import { Projects } from "@/components/landing/Projects";
 import { Services } from "@/components/landing/Services";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { TechStack } from "@/components/landing/TechStack";
+import { Testimonials } from "@/components/landing/Testimonials";
 import { personJsonLd } from "@/lib/seo";
 
 export const revalidate = 60;
@@ -24,6 +25,7 @@ export default function Home() {
         <TechStack />
         <Process />
         <Projects />
+        <Testimonials />
         <Contact />
       </main>
       <SiteFooter />
