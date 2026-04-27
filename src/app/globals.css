@@ -63,6 +63,7 @@
 
 html {
   color-scheme: dark;
+  scroll-behavior: smooth;
 }
 
 ::selection {
@@ -84,7 +85,25 @@ html {
   }
 }
 
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *,
   *::before,
   *::after {
