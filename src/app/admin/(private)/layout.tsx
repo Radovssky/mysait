@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Toaster } from "@/components/ui/sonner";
 import { requireAdmin } from "@/lib/auth-helpers";
 
 export const metadata: Metadata = {
@@ -13,5 +14,10 @@ export default async function AdminPrivateLayout({
   children: React.ReactNode;
 }) {
   await requireAdmin();
-  return <div className="min-h-screen bg-background">{children}</div>;
+  return (
+    <div className="min-h-screen bg-background">
+      {children}
+      <Toaster richColors position="bottom-right" />
+    </div>
+  );
 }
