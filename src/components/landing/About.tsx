@@ -12,7 +12,7 @@ export function About() {
       eyebrow="о себе"
       title="Знаю, как устроены процессы — поэтому автоматизирую их так, чтобы работали"
     >
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,360px)_1fr] lg:items-start">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,360px)_1fr] lg:items-center">
         <RevealOnScroll>
           <div className="relative aspect-[3/4] overflow-hidden rounded-2xl border border-border bg-card">
             <Image
