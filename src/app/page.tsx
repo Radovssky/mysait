@@ -8,7 +8,9 @@ import { Services } from "@/components/landing/Services";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { TechStack } from "@/components/landing/TechStack";
 import { Testimonials } from "@/components/landing/Testimonials";
-import { personJsonLd } from "@/lib/seo";
+import { faqItems } from "@/content/faq";
+import { services } from "@/content/services";
+import { faqJsonLd, personJsonLd, serviceJsonLd } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -19,6 +21,17 @@ export default function Home() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        {serviceJsonLd(services).map((entry) => (
+          <script
+            key={entry.name}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(entry) }}
+          />
+        ))}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqItems)) }}
         />
         <Hero />
         <About />
