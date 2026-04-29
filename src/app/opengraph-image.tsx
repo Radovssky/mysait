@@ -6,6 +6,7 @@ import { siteUrl } from "@/lib/seo";
 export const alt = `${about.name} — ${about.positioning}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const dynamic = "force-dynamic";
 
 export default async function OpengraphImage() {
   let host = "radovssky.ru";
