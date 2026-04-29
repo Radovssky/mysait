@@ -55,7 +55,7 @@ export function TechStack() {
                 ))}
               </ul>
               <p className="mt-8 font-mono text-sm text-muted-foreground">
-                <span className="text-primary">{"// "}</span>и многое другое
+                <span className="text-primary">{"// "}</span>и любые другие сервисы по запросу
               </p>
             </div>
           </RevealOnScroll>
